@@ -1,0 +1,17 @@
+Primera linea de fichero1
+<<<<<<< HEAD
+Segunda linea de fichero1
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+Tercera linea de fichero1
+=======
+>>>>>>> 8e3c7cc7add3ab484913099e139ae4e3740c8cf7
+>>>>>>> 1311c4d29a1a638210574fd2fd9812734c19dfd1
+=======
+>>>>>>> 8e3c7cc7add3ab484913099e139ae4e3740c8cf7
+>>>>>>> 3a7cd6f4bf01a4183c5550c5a73c26448af07395
+=======
+>>>>>>> 8e3c7cc7add3ab484913099e139ae4e3740c8cf7
+>>>>>>> cambio1
