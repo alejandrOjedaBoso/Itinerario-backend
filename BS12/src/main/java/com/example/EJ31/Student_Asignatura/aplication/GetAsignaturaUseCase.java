@@ -28,6 +28,7 @@ public class GetAsignaturaUseCase implements GetAsignaturaPort {
 
     @Override
     public List<AsignaturaOutputDTO> getAsignaturaStudent(int id) throws Exception {
+        //Devuelve las asignaturas en las cuales esta apuntado un estudiante
         Student student=studentRepo.findById(id).orElseThrow(()->new Exception("No se ha encontrado estudiante"));
         List<Student_Asignatura> asignaturas=student.getStudent_asignatura();
         List<AsignaturaOutputDTO> asignaturasOutput=new ArrayList<AsignaturaOutputDTO>();

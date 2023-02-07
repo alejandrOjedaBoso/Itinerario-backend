@@ -31,12 +31,12 @@ public class Student {
     @JoinColumn(name = "id_persona")
     private Persona persona;
 
-        @ManyToOne(cascade = CascadeType.ALL)
-        @JoinColumn(name = "id_profesor")
-        private Profesor profesor;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_profesor")
+    private Profesor profesor;
 
-        @OneToMany(mappedBy = "student",cascade = CascadeType.ALL)
-        private List<Student_Asignatura> student_asignatura;
+    @OneToMany(mappedBy = "student",cascade = CascadeType.ALL)
+    private List<Student_Asignatura> student_asignatura;
 
     public Student(StudentInputDTO studentInputDTO){
               setId_student(studentInputDTO.getId_student());

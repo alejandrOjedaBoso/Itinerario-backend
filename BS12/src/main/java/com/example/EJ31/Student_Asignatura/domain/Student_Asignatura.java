@@ -26,7 +26,7 @@ public class Student_Asignatura {
     @Column(name = "asignatura")
     private String asignatura;
 
-    @Column(name = "comentarios")
+    @Column(name = "comnent")
     private String comment;
 
     @Column(name = "initial_date")

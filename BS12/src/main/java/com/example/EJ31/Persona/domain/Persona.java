@@ -72,8 +72,5 @@ public class Persona {
         setCreated_date(personaDTO.getCreated_date());
         setImagen_url(personaDTO.getImagen_url());
         setTermination_date(personaDTO.getTermination_date());
-        if(usuario==null||password==null||name==null||company_email==null||personal_email==null||city==null||created_date==null){
-            throw new Request422("Hay algun campo que no se han itroducido correctamente");
-        }
     }
 }
