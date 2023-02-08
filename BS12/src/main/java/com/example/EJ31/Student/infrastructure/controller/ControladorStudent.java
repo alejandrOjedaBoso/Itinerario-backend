@@ -56,14 +56,14 @@ public class ControladorStudent {
     }
     @PutMapping("/asignar/profesor/{idStudent}/{idProfesor}")
     public void asignProfesor(@PathVariable int idStudent, @PathVariable int idProfesor) throws Exception {
-        asignStudentPort.asignPersonaId(idStudent,idProfesor);
+        asignStudentPort.asignProfesorId(idStudent,idProfesor);
     }
-    @PutMapping("/asignar/asignatura/{idStudent}")
-    public void asignAsig(@PathVariable int idStudent, @RequestBody Map<String, Integer> mapaAsig) throws Exception {
-        asignStudentPort.asignAsig(idStudent,mapaAsig);
+    @PutMapping("/asignar/asignatura/{idStudent}/{idAsignatura}")
+    public void asignAsig(@PathVariable int idStudent, @PathVariable int idAsignatura) throws Exception {
+        asignStudentPort.asignAsig(idStudent,idAsignatura);
     }
-    @PutMapping("/desasignar/asignatura/{idStudent}")
-    public void desasignAsig(@PathVariable int idStudent, @RequestBody Map<String, Integer> mapaAsig) throws Exception {
-        asignStudentPort.desasignAsig(idStudent,mapaAsig);
+    @PutMapping("/desasignar/asignatura/{idStudent}/{idAsignatura}")
+    public void desasignAsig(@PathVariable int idStudent, @PathVariable int idAsignatura) throws Exception {
+        asignStudentPort.desasignAsig(idStudent,idAsignatura);
     }
 }

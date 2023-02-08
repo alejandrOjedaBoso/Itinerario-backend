@@ -19,6 +19,8 @@ public class AsignProfesorUseCase implements AsignProfesorPort {
         Profesor profesor=profesorRepo.findById(idProfesor).orElseThrow(()->new Exception("El id de profesor no coincide"));
         Persona persona=personaRepo.findById(idPersona).orElseThrow(()-> new Exception("El id de persona no coincide"));
         profesor.setPersona(persona);
+        persona.setProfesor(profesor);
         profesorRepo.save(profesor);
+        personaRepo.save(persona);
     }
 }

@@ -2,6 +2,7 @@ package com.example.EJ31.Persona.aplication;
 
 import com.example.EJ31.Persona.aplication.port.FindUsuarioPort;
 import com.example.EJ31.Persona.domain.Persona;
+import com.example.EJ31.Persona.domain.ePersona;
 import com.example.EJ31.Persona.infrastucture.controller.dto.output.PersonaFullOutPutDTO;
 import com.example.EJ31.Persona.infrastucture.controller.dto.output.PersonaOutputDTO;
 import com.example.EJ31.Persona.infrastucture.exceptions.error404.Request404;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.io.DataOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,79 +32,42 @@ public class FindUsuarioUseCase implements FindUsuarioPort {
     ProfesorRepo profesorRepo;
     @Override
     public List<PersonaOutputDTO> todasPersonas(String outputType) throws Exception {
-        List<Persona> listaPersona=personaRepo.findAll();
-        List<PersonaOutputDTO> listaDTO= new ArrayList<PersonaOutputDTO>();
-        PersonaOutputDTO personaOutputDTO=null;
-        for (Persona per: listaPersona) {
-            personaOutputDTO=tipoPersona(per);
-            if(outputType.equalsIgnoreCase("full")&& personaOutputDTO!=null){
-                listaDTO.add(personaOutputDTO);
-            }else {
-                personaOutputDTO=new PersonaOutputDTO(per);
-                listaDTO.add(personaOutputDTO);
-            }
+        ArrayList<PersonaOutputDTO> listaDeSalida=new ArrayList<PersonaOutputDTO>();
+
+        for (Persona p:personaRepo.findAll()) {
+                listaDeSalida.add(new PersonaOutputDTO(p));
         }
-        return listaDTO;
+        return listaDeSalida;
     }
     @Override
     public PersonaOutputDTO buscarPorId(int id, String outputType) throws Exception {
-        PersonaOutputDTO personaOutputDTO=null,aux=null;
-        if(personaRepo.findById(id).isEmpty()){
-            throw new Request404("No se ha encontrado");
+        Persona persona=personaRepo.findById(id).orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
+        PersonaOutputDTO personaOutputDTO;
+
+
+        //Compruebo si es alumno o profesor y a la vez es full, si no es ninguno de los dos solo devuelve la persona
+        if(persona.getProfesor()!=null && outputType.equalsIgnoreCase("full")){
+            personaOutputDTO=new PersonaFullOutPutDTO(persona, ePersona.PROFESOR);
+        }else if(persona.getStudent()!=null && outputType.equalsIgnoreCase("full")){
+            personaOutputDTO=new PersonaFullOutPutDTO(persona, ePersona.ESTUDIANTE);
+        }else{
+            personaOutputDTO=new PersonaOutputDTO(persona);
         }
-        Persona per = personaRepo.findById(id).orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
-        personaOutputDTO=new PersonaOutputDTO(per);
-        aux=tipoPersona(per);
-        if (aux!=null && outputType.equalsIgnoreCase("full")){
-            personaOutputDTO=aux;
-        }
+
         return personaOutputDTO;
     }
     @Override
     public ArrayList<PersonaOutputDTO> buscarPorNombre(String nombre,String outputType) throws Exception {
-        List<Persona> listaPersona= personaRepo.findAll();
-        ArrayList<PersonaOutputDTO> salidaDTO= new ArrayList<PersonaOutputDTO>();
-        PersonaOutputDTO personaOutputDTO=null;
-        for (int i = 0; i < listaPersona.size(); i++) {
-            if(listaPersona.get(i).getName().equalsIgnoreCase(nombre)){
-                personaOutputDTO=tipoPersona(listaPersona.get(i));
-                if (outputType.equalsIgnoreCase("full")&&personaOutputDTO!=null){
-                    salidaDTO.add(personaOutputDTO);
-                }else {
-                    personaOutputDTO=new PersonaOutputDTO(listaPersona.get(i));
-                    salidaDTO.add(personaOutputDTO);
-                }
+        ArrayList<PersonaOutputDTO> listaSalida = new ArrayList<>();
+        for (Persona p: personaRepo.findByName(nombre)) {
+            if(p.getProfesor()!=null && outputType.equalsIgnoreCase("full")){
+                listaSalida.add(new PersonaFullOutPutDTO(p, ePersona.PROFESOR));
+            }else if(p.getStudent()!=null && outputType.equalsIgnoreCase("full")){
+                listaSalida.add(new PersonaFullOutPutDTO(p, ePersona.ESTUDIANTE));
+            }else{
+                listaSalida.add(new PersonaOutputDTO(p));
             }
         }
-        if(listaPersona.isEmpty()){
-            throw new Exception("No existe el nombre");
-        }
-        else{
-            return salidaDTO;
-        }
-    }
-    private PersonaOutputDTO tipoPersona(Persona per) throws Exception {
-        List<Student> listaEstu=studentRepo.findAll();
-        List<Profesor> listaProfesors=profesorRepo.findAll();
-        PersonaOutputDTO devolver=null;
-        Persona aux=null;
-
-        for (Student i:listaEstu) {
-            aux=i.getPersona();
-            if(aux!=null) {
-                if (i.getPersona().getId_persona() == per.getId_persona()) {
-                    devolver = new PersonaFullOutPutDTO(per, new StudentOutputDTO(i));
-                }
-            }
-        }
-        for (Profesor i:listaProfesors) {
-            aux=i.getPersona();
-            if(aux!=null) {
-                if (i.getPersona().getId_persona() == per.getId_persona()) {
-                    devolver = new PersonaFullOutPutDTO(per, new ProfesorOutputDTO(i));
-                }
-            }
-        }
-        return devolver;
+        return listaSalida;
     }
 }

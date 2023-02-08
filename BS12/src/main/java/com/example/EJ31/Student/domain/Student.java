@@ -35,7 +35,7 @@ public class Student {
     @JoinColumn(name = "id_profesor")
     private Profesor profesor;
 
-    @OneToMany(mappedBy = "student",cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "student",cascade = CascadeType.ALL)
     private List<Student_Asignatura> student_asignatura;
 
     public Student(StudentInputDTO studentInputDTO){

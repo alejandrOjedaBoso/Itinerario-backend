@@ -24,7 +24,7 @@ public class DeleteUsuarioUseCase implements DeleteUsuarioPort {
     StudentRepo studentRepo;
     @Override
     public void borrarUsu(int id) throws Exception {
-        Persona per = personaRepo.findById(id).orElseThrow(()->new Exception("No se ha encontrado el id de la persona"));
+        Persona per = personaRepo.findById(id).orElseThrow(()->new Request404("No se ha encontrado el id de la persona"));
         boolean borrar=true;
 
         for (Student i:studentRepo.findAll()) {

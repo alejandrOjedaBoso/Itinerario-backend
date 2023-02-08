@@ -6,6 +6,7 @@ import com.example.EJ31.Student_Asignatura.infrastructure.controller.dto.input.A
 import lombok.Data;
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -19,9 +20,9 @@ public class Student_Asignatura {
     @JoinColumn(name = "id_profesor")
     private Profesor profesor;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_student")
-    private Student student;
+    private List<Student> student;
 
     @Column(name = "asignatura")
     private String asignatura;

@@ -12,6 +12,7 @@ import com.example.EJ31.Student_Asignatura.infrastructure.repository.jpa.Asignat
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 @Service
@@ -29,37 +30,61 @@ public class AsignStudentUseCase implements AsignStudentPort {
     public void asignPersonaId(int idStudent, int idPersona) throws Exception {
         Student student=studentRepo.findById(idStudent).orElseThrow(()->new Exception("No se ha encontrado el id: "+idStudent+" para el estudiante"));
         Persona persona=personaRepo.findById(idPersona).orElseThrow(()->new Exception("No se ha encontrado el id: "+idPersona+" para persona"));
+
         student.setPersona(persona);
+        persona.setStudent(student);
+
         studentRepo.save(student);
+        personaRepo.save(persona);
     }
 
     @Override
     public void asignProfesorId(int idStudent, int idProfesor) throws Exception {
         Student student=studentRepo.findById(idStudent).orElseThrow(()->new Exception("No se ha encontrado el id: "+idStudent+" para el estudiante"));
         Profesor profesor=profesorRepo.findById(idProfesor).orElseThrow(()->new Exception("No se ha encontrado el id: "+idProfesor+" para el profesor"));
+
+        if(profesor.getStudent()==null){
+            profesor.setStudent(new ArrayList<Student>());
+        }
+
+        profesor.getStudent().add(student);
         student.setProfesor(profesor);
+
         studentRepo.save(student);
+        profesorRepo.save(profesor);
     }
 
     @Override
-    public void asignAsig(int idStudent, Map<String, Integer> mapaAsig) throws Exception {
-        Student_Asignatura student_asignatura=null;
-        Student student=studentRepo.findById(idStudent).orElseThrow(()->new Exception(""));
-        for (Integer idAsig: mapaAsig.values()) {
-            student_asignatura=asignaturaRepo.findById(idAsig).orElseThrow(()->new Exception("Id no encontrado de asignatura"));
-            student.getStudent_asignatura().add(student_asignatura);
+    public void asignAsig(int idStudent, int asig) throws Exception {
+        Student_Asignatura student_asignatura=asignaturaRepo.findById(asig).orElseThrow(()->new Exception("No se ha encontrado el id: "+asig+" para la asignatura"));
+        Student student= studentRepo.findById(idStudent).orElseThrow(()->new Exception("No se ha encontrado el id: "+idStudent+" para el estuduante"));
+
+        if (student.getStudent_asignatura()==null){
+            student.setStudent_asignatura(new ArrayList<Student_Asignatura>());
         }
-        studentRepo.save(student);
+        if(student_asignatura.getStudent()==null){
+            student_asignatura.setStudent(new ArrayList<Student>());
+        }
+
+        student_asignatura.getStudent().add(student);
+        student.getStudent_asignatura().add(student_asignatura);
+
+        asignaturaRepo.saveAndFlush(student_asignatura);
+        studentRepo.saveAndFlush(student);
     }
 
     @Override
-    public void desasignAsig(int idStudent, Map<String, Integer> mapaAsig) throws Exception {
-        Student_Asignatura student_asignatura=null;
-        Student student=studentRepo.findById(idStudent).orElseThrow(()->new Exception(""));
-        for (Integer idAsig: mapaAsig.values()) {
-            student_asignatura=asignaturaRepo.findById(idAsig).orElseThrow(()->new Exception("Id no encontrado de asignatura"));
+    public void desasignAsig(int idStudent, int asig) throws Exception {
+        Student_Asignatura student_asignatura=asignaturaRepo.findById(asig).orElseThrow(()->new Exception("No se ha encontrado el id: "+asig+" para la asignatura"));
+        Student student= studentRepo.findById(idStudent).orElseThrow(()->new Exception("No se ha encontrado el id: "+idStudent+" para el estuduante"));
+
+        if (student.getStudent_asignatura()!=null && student.getStudent_asignatura().contains(student_asignatura)) {
             student.getStudent_asignatura().remove(student_asignatura);
+            studentRepo.saveAndFlush(student);
         }
-        studentRepo.save(student);
+        if(student_asignatura.getStudent()!=null && student_asignatura.getStudent().contains(student)){
+            student_asignatura.getStudent().remove(student);
+            asignaturaRepo.saveAndFlush(student_asignatura);
+        }
     }
 }
