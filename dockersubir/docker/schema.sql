@@ -7,3 +7,4 @@ CREATE TABLE employee
  employeeEmail varchar(100) DEFAULT NULL,
  PRIMARY KEY (employeeId)
 );
+insert into employee(employeeId, employeeName , employeeAddress,employeeEmail) values('1','Jack','USA','jack@gmail.com');
