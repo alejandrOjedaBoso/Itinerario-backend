@@ -28,7 +28,7 @@ public class ControladorPersona {
     @Autowired
     MyFeign myFeign;
 
-    @CrossOrigin()
+    @CrossOrigin(origins = "https://cdpn.io/")
     @PostMapping("/addperson")
     public PersonaOutputDTO addPersona(@RequestBody PersonaInputDTO persona) throws Exception{
         return addUsuario.aniadirUsuario(persona);
@@ -41,7 +41,7 @@ public class ControladorPersona {
     public ArrayList<PersonaOutputDTO> getNombre(@PathVariable String name,@RequestParam(name = "outputType",defaultValue = "simple") String outputType) throws Exception {
         return findUsuario.buscarPorNombre(name,outputType);
     }
-    @CrossOrigin()
+    @CrossOrigin(origins = "https://cdpn.io/")
     @GetMapping("/getall")
     public List<PersonaOutputDTO> getAll(@RequestParam(name = "outputType",defaultValue = "simple") String outputType) throws Exception{
         return findUsuario.todasPersonas(outputType);
