@@ -1,6 +1,6 @@
-package com.example.feign.File.domain;
+package com.example.feign.File.infrastucture.controller.DTO.output;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,16 +12,10 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-public class MyFile {
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+public class MyFileOutputDTO {
     private int fileId;
-
     private String nombre;
-
     private String extension;
-    @Lob
     private byte[] metaDatos;
     private Date creationDate;
 }
