@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/file")
@@ -37,5 +38,9 @@ public class MyFileController {
     @GetMapping("/descargarnombre/{nombre}")
     public String descargarNombre(@PathVariable String nombre) throws IOException {
         return getMyFilePort.decargarNombre(nombre);
+    }
+    @GetMapping("/devolvertipo/{extension}")
+    public List<MyFileOutputDTO> devolverTipo(@PathVariable String extension){
+        return getMyFilePort.devolverTipo(extension);
     }
 }

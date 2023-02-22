@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -68,5 +70,24 @@ public class GetMyFile implements GetMyFilePort {
         fos.close();
 
         return "Se guardado el archivo correctamente";
+    }
+
+    @Override
+    public List<MyFileOutputDTO> devolverTipo(String extension) {
+        extension=extension.replace('.','/');
+        ArrayList<MyFileOutputDTO> listaSalida=new ArrayList<MyFileOutputDTO>();
+        MyFileOutputDTO myFileOutputDTO;
+
+        for (MyFile temp: myFileJPA.findByExtension(extension)) {
+            myFileOutputDTO=new MyFileOutputDTO();
+            myFileOutputDTO.setFileId(temp.getFileId());
+            myFileOutputDTO.setNombre(temp.getNombre());
+            myFileOutputDTO.setExtension(temp.getExtension());
+            myFileOutputDTO.setMetaDatos(temp.getMetaDatos());
+            myFileOutputDTO.setCreationDate(temp.getCreationDate());
+
+            listaSalida.add(myFileOutputDTO);
+        }
+        return listaSalida;
     }
 }
