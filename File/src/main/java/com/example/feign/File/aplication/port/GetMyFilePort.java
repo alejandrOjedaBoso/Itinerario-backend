@@ -1,7 +1,9 @@
 package com.example.feign.File.aplication.port;
 
+import com.example.feign.File.domain.MyFile;
 import com.example.feign.File.infrastucture.controller.DTO.output.MyFileOutputDTO;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -12,4 +14,6 @@ public interface GetMyFilePort {
     public String descargarId(int id) throws IOException;
     public String decargarNombre(String nombre) throws IOException;
     public List<MyFileOutputDTO> devolverTipo(String extension);
+    public MyFileOutputDTO getMapperId(int id);
+    public MyFileOutputDTO getMapperName(String name);
 }

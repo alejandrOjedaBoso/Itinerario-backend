@@ -3,8 +3,10 @@ package com.example.feign.File.aplication;
 import com.example.feign.File.aplication.port.GetMyFilePort;
 import com.example.feign.File.domain.MyFile;
 import com.example.feign.File.infrastucture.controller.DTO.output.MyFileOutputDTO;
+import com.example.feign.File.infrastucture.controller.ModelMapperConfiguration;
 import com.example.feign.File.infrastucture.repository.MyFileJPA;
 import com.example.feign.Persona.infrastucture.exceptions.error404.Request404;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -89,5 +91,21 @@ public class GetMyFile implements GetMyFilePort {
             listaSalida.add(myFileOutputDTO);
         }
         return listaSalida;
+    }
+
+    @Override
+    public MyFileOutputDTO getMapperId(int id) {
+        MyFile myFile=myFileJPA.findById(id).orElseThrow(()-> new Request404("No se ha encontrado el id: "+id));
+        return new ModelMapper().map(myFile,MyFileOutputDTO.class);
+    }
+
+    @Override
+    public MyFileOutputDTO getMapperName(String name) {
+        MyFile myFile=myFileJPA.findByNombre(name);
+        if(myFile==null){
+            throw new Request404("No se ha encontrado el nomrbe: "+name);
+        }
+        ModelMapper modelMapper=new ModelMapper();
+        return new ModelMapper().map(myFile,MyFileOutputDTO.class);
     }
 }
