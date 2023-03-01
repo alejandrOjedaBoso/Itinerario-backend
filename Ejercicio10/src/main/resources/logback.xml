@@ -32,13 +32,6 @@
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
     </appender>
-    <appender name="logger2appender" class="ch.qos.logback.core.FileAppender">
-        <file>logfile2.log</file>
-        <append>false</append>
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
 
     <!--WARNING-->
     <root level="WARN">

@@ -27,6 +27,7 @@ public class GetMyFile implements GetMyFilePort {
     @Override
     public MyFileOutputDTO buscarId(int id) {
         MyFile myFile=myFileJPA.findById(id).orElseThrow(()->new Request404("No existe el id "+id));
+        //Constructor de MyFileOutputDTO
         return new MyFileOutputDTO(myFile.getFileId(),myFile.getNombre(),myFile.getExtension(),myFile.getMetaDatos(),myFile.getCreationDate());
     }
 
@@ -76,7 +77,7 @@ public class GetMyFile implements GetMyFilePort {
 
     @Override
     public List<MyFileOutputDTO> devolverTipo(String extension) {
-        extension=extension.replace('.','/');
+        extension.replace('.','/');
         ArrayList<MyFileOutputDTO> listaSalida=new ArrayList<MyFileOutputDTO>();
         MyFileOutputDTO myFileOutputDTO;
 
