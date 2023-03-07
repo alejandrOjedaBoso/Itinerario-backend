@@ -4,12 +4,15 @@ import com.example.EJ31.Persona.aplication.port.AddUsuarioPort;
 import com.example.EJ31.Persona.aplication.port.DeleteUsuarioPort;
 import com.example.EJ31.Persona.aplication.port.UpdateUsuarioPort;
 import com.example.EJ31.Persona.aplication.port.FindUsuarioPort;
+import com.example.EJ31.Persona.domain.Persona;
 import com.example.EJ31.Persona.infrastucture.controller.dto.input.PersonaInputDTO;
 import com.example.EJ31.Persona.infrastucture.controller.dto.output.PersonaOutputDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -49,5 +52,9 @@ public class ControladorPersona {
     @PutMapping("/modificar/{id}")
     public PersonaOutputDTO updateUsu(@PathVariable int id,@RequestBody PersonaInputDTO persona) throws Exception {
         return updateUsuario.modificarPersona(id,persona);
+    }
+    @GetMapping("/criteria")
+    public ResponseEntity<List<Persona>> buscarCriteria(@RequestParam(required = false) String tipoDato, @RequestParam(required = false) String ordenar, @RequestBody HashMap<String, Object> datos,@RequestParam(required = false,defaultValue = "10") String tamano, @RequestParam(required = true) int numPag){
+        return ResponseEntity.ok(findUsuario.criteriaEj1(datos,tipoDato,ordenar,Integer.parseInt(tamano),numPag));
     }
 }

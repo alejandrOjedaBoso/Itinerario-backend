@@ -15,12 +15,20 @@ import com.example.EJ31.Student.infrastructure.controller.dto.output.StudentOutp
 import com.example.EJ31.Student.infrastructure.repository.jpa.StudentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import javax.persistence.criteria.Predicate;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.io.DataOutput;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 
 @Service
 public class FindUsuarioUseCase implements FindUsuarioPort {
@@ -69,5 +77,55 @@ public class FindUsuarioUseCase implements FindUsuarioPort {
             }
         }
         return listaSalida;
+    }
+
+    //Criteria Ejercicio1
+    @PersistenceContext
+    private EntityManager entityManager;
+    @Override
+    public List<Persona> criteriaEj1(HashMap<String, Object> persona, String tipoFecha,String ordenar,int tamano, int numPag) {
+        CriteriaBuilder cb= entityManager.getCriteriaBuilder();
+        CriteriaQuery<Persona> query=cb.createQuery(Persona.class);
+        Root<Persona> root= query.from(Persona.class);
+
+
+        List<Predicate> predicates=new ArrayList<>();
+
+        for (Map.Entry<String,Object> entry : persona.entrySet()) {
+            String campo=entry.getKey();
+            Object valor=entry.getValue();
+
+            if (valor!=null){
+                switch(campo){
+                    case "usuario":
+                        predicates.add(cb.like(root.get(campo),"%"+(String)valor+"%"));
+                        break;
+                    case "name":
+                        predicates.add(cb.like(root.get(campo),"%"+(String)valor+"%"));
+                        break;
+                    case "surname":
+                        predicates.add(cb.like(root.get(campo),"%"+(String)valor+"%"));
+                        break;
+                    case "created_date":
+                        Date fecha=(Date) valor;
+                        switch (tipoFecha){
+
+                            case "mayor":
+                                predicates.add(cb.greaterThan(root.get(campo).as(Date.class),fecha));
+                                break;
+                            default:
+                                predicates.add(cb.lessThan(root.get(campo).as(Date.class),fecha));
+                                break;
+                        }
+                        break;
+                }
+            }
+        }
+        if (ordenar!=null&&(ordenar.equalsIgnoreCase("usuario")||ordenar.equalsIgnoreCase("name"))) {
+            query.select(root).where(predicates.toArray(new Predicate[predicates.size()])).orderBy(cb.desc(root.get(ordenar)));
+        }else {
+            query.select(root).where(predicates.toArray(new Predicate[predicates.size()]));
+        }
+        return entityManager.createQuery(query).setMaxResults(tamano).setFirstResult(numPag).getResultList().stream().toList();
     }
 }
